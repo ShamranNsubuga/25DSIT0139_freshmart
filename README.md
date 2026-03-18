@@ -174,3 +174,4 @@ mysql -u root -p freshmart < freshmart.sql
 | Blank page or 404 error      | Ensure Apache is running and folder is inside htdocs            |
 | Images/CSS not loading       | Check that folder path is htdocs/freshmart/                     |
 | "Table not found" errors     | Re-import freshmart.sql in phpMyAdmin                           |
+_Submitted for Web Development Assignment — 2025_
