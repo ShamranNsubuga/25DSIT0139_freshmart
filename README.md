@@ -139,3 +139,7 @@ C:\xampp\htdocs\freshmart\
 - Add email notifications (PHPMailer)
 - Add customer wishlist
 - Add product reviews & ratings
+
+
+
+
