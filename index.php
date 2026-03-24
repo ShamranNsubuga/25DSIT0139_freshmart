@@ -1,6 +1,22 @@
 <?php
+// ─── config.php already contains the DB connection ───
+// db_connect.php is a standalone alternative — include either one.
+// Here we use config.php because it also provides helper functions.
 require_once 'includes/config.php';
+// If you ever want to use the dedicated connection file instead, swap the
+// line above for:  require_once 'db_connect.php';
+
 $pageTitle = 'Fresh Groceries Delivered';
+
+// ─── FETCH FEATURE STRIP CONTENT FROM tbl_content ───────────────────────────
+// Selecting only active rows, ordered by sort_order so admins can control
+// the display sequence directly from phpMyAdmin.
+$features = $conn->query("
+    SELECT id, title, description, image_url
+    FROM   tbl_content
+    WHERE  is_active = 1
+    ORDER  BY sort_order ASC, id ASC
+");
 
 // ─── FILTERS ───
 $where = "WHERE p.is_active = 1";
@@ -138,14 +154,33 @@ include 'includes/header.php';
   <?php endif; ?>
 </div>
 
-<!-- FEATURES -->
+<!-- FEATURES — rendered dynamically from tbl_content in the database -->
+<!-- To add, remove, or edit a feature, simply update tbl_content in phpMyAdmin. -->
 <div class="features-strip">
   <div class="features-inner">
-    <div class="feature"><div class="feature-icon">🚚</div><div><h4>Free Delivery</h4><p>On orders over UGX 50,000 within Kampala</p></div></div>
-    <div class="feature"><div class="feature-icon">🌿</div><div><h4>Farm Fresh</h4><p>Sourced daily from local Ugandan farms</p></div></div>
-    <div class="feature"><div class="feature-icon">💳</div><div><h4>Secure Payment</h4><p>Mobile Money, Card & Cash on delivery</p></div></div>
-    <div class="feature"><div class="feature-icon">🔄</div><div><h4>Easy Returns</h4><p>Not satisfied? Return within 24 hours</p></div></div>
-    <div class="feature"><div class="feature-icon">📞</div><div><h4>24/7 Support</h4><p>+256 700 000 000</p></div></div>
+
+    <?php if ($features && $features->num_rows > 0): ?>
+      <?php while ($f = $features->fetch_assoc()): ?>
+        <div class="feature">
+          <div class="feature-icon"><?= htmlspecialchars($f['image_url']) ?></div>
+          <div>
+            <h4><?= htmlspecialchars($f['title']) ?></h4>
+            <p><?= htmlspecialchars($f['description']) ?></p>
+          </div>
+        </div>
+      <?php endwhile; ?>
+
+    <?php else: ?>
+      <!-- "No records found" fallback — shown when tbl_content is empty -->
+      <div class="feature" style="grid-column:1/-1;justify-content:center;opacity:.6;">
+        <div class="feature-icon">📭</div>
+        <div>
+          <h4>No features listed yet</h4>
+          <p>Add rows to <strong>tbl_content</strong> in phpMyAdmin to display them here.</p>
+        </div>
+      </div>
+    <?php endif; ?>
+
   </div>
 </div>
 

@@ -183,3 +183,25 @@ INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
 (3, 9, 2, 18000),(3, 6, 1, 22000),(3, 5, 3, 2500),
 (4, 1, 2, 4500),(4, 11, 1, 5500),
 (5, 3, 2, 18000),(5, 10, 1, 4000);
+
+-- ─── SITE CONTENT (tbl_content) ───
+-- Used to dynamically render the Features Strip on the homepage.
+-- Add, edit, or remove rows in phpMyAdmin to update the homepage
+-- without touching any HTML code.
+CREATE TABLE IF NOT EXISTS tbl_content (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  title       VARCHAR(200)  NOT NULL,
+  description TEXT          NOT NULL,
+  image_url   VARCHAR(10)   NOT NULL COMMENT 'Emoji icon used as the visual',
+  sort_order  INT           DEFAULT 0  COMMENT 'Lower = appears first',
+  is_active   TINYINT(1)    DEFAULT 1  COMMENT '1 = visible, 0 = hidden',
+  created_at  DATETIME      DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Sample feature rows (matches the original hard-coded strip)
+INSERT INTO tbl_content (title, description, image_url, sort_order) VALUES
+('Free Delivery',   'On orders over UGX 50,000 within Kampala',          '🚚', 1),
+('Farm Fresh',      'Sourced daily from local Ugandan farms',             '🌿', 2),
+('Secure Payment',  'Mobile Money, Card & Cash on delivery',              '💳', 3),
+('Easy Returns',    'Not satisfied? Return within 24 hours',              '🔄', 4),
+('24/7 Support',    '+256 700 000 000',                                   '📞', 5);
